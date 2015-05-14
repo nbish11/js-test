@@ -1,0 +1,60 @@
+{
+  "name": "microjs",
+  "version": "0.1.0",
+  "description": "microjs scaffolded with generator-microjs v0.1.2.",
+  "author": {
+    "name": "Nathan",
+    "email": "",
+    "url": "https://github.com/nbish11"
+  },
+  "homepage": "https://github.com/nbish11/microjs",
+  "bugs": {
+    "url": "https://github.com/nbish11/microjs/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://nbish11.mit-license.org"
+    }
+  ],
+  "maintainers": [],
+  "contributors": [
+    {
+      "name": "Daniel Lamb",
+      "email": "dlamb.open.source@gmail.com",
+      "url": "https://github.com/daniellmb"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nbish11/microjs.git"
+  },
+  "main": "microjs.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "keywords": [
+    "micro",
+    "framework",
+    "library"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-complexity": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-karma": "*",
+    "karma-chai": "*",
+    "karma-coverage": "*",
+    "karma-mocha": "*",
+    "karma-phantomjs-launcher": "*",
+    "karma-sinon": "*",
+    "load-grunt-tasks": "^3.1.0",
+    "mocha": "*",
+    "sinon-chai": "*"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}

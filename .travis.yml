@@ -1,0 +1,35 @@
+language: node_js
+
+node_js:
+  - '0.10'
+
+before_script:
+  - npm install -g codeclimate-test-reporter
+
+after_script:
+  #TODO: enable publishing code coverage reports
+  - codeclimate < test/coverage/**/lcov.info
+
+notifications:
+  # publish build status to IRC channel: #microjs
+  #irc:
+    #channels:
+    #- chat.freenode.net#microjs
+    #on_success: always
+    #on_failure: always
+   # template:
+    #- '%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}'
+  #  - 'Change view : %{compare_url}'
+  #  - 'Build details : %{build_url}'
+  #TODO: enable publishing build status to gitter.im
+  # publish build status to gitter chat room: https://gitter.im/nbish11/microjs
+  #webhooks:
+  #  urls:
+  #  - [REPLACE WITH YOUR WEBHOOK URL; https://webhooks.gitter.im/e/XXXXXXXXXXXXXXXX]
+  #  on_success: always
+  #  on_failure: always
+  #  on_start: false
+
+addons:
+  code_climate:
+    access_key: c50e76ff80b4c427f5901604967c567760d128efce1953369aebca859c118431
