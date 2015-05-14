@@ -1,6 +1,14 @@
-/* global module, require */
+/* global module, require, console */
 module.exports = function (grunt) {
     'use strict';
+    
+    var inArray = function (needle, haystack) {
+        for (var i = 0, l = haystack.length; i < l; i++) {
+            if (haystack[i] === needle) { return true; }
+        }
+        
+        return false;
+    };
     
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -107,11 +115,27 @@ module.exports = function (grunt) {
     
     grunt.registerTask('test', ['jshint', 'karma:unit']);
     grunt.registerTask('start', ['karma:watch:start', 'watch']);
-    //grunt.registerTask('release', ['build', 'bump']);
     grunt.registerTask('build', ['concat', 'uglify']);
     grunt.registerTask('default', ['test', 'build']);
-    grunt.registerTask('release', function (target) {
-        target = 'bump-only:' + (target || 'minor');
-        grunt.task.run(['default', target, 'bump-commit']);
+    grunt.registerTask('release', function (target, msg) {
+        var bumpOptions = grunt.config.data.bump.options;
+        var allowed = ['patch', 'minor', 'major'];
+        
+        if (inArray(target, allowed)) {
+        
+            if (msg) {
+                bumpOptions.commitMessage = msg;
+            }
+            
+        } else if (!msg && target) {
+            bumpOptions.commitMessage = target;
+            target = 'patch';
+        } else {
+            target = 'patch';
+        }
+        
+        console.log(target, bumpOptions.commitMessage);
+        target = 'bump-only:' + target;
+        //grunt.task.run(['default', target, 'bump-commit']);
     });
 };
