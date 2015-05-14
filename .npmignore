@@ -1,13 +1,7 @@
 node_modules/
 npm-debug.log
+lib/
 bower_components/
-coverage/
-.idea/
-.DS_Store
-.DS_Store?
-._*
-.Trashes
-Icon?
-ehthumbs.db
-Thumbs.db
-.tmp
+sauce.json
+.coveralls.yml
+test/coverage/

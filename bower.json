@@ -1,7 +1,13 @@
 {
-  "name": "microjs",
-  "version": "0.1.0",
-  "main": "microjs.js",
+  "name": "Moovie",
+  "description": "An advanced HTML5 video player for MooTools.",
+  "version": "0.1.1",
+  "main": [
+    "dist/Moovie.js",
+    "dist/Moovie.css"
+  ],
+  "moduleType": "globals",
+  "license": "MIT",
   "ignore": [
     ".editorconfig",
     ".gitattributes",
@@ -14,10 +20,32 @@
     "npm-shrinkwrap.json",
     "package.json"
   ],
-  "dependencies": {
-
+  "keywords": [
+    "html5",
+    "video",
+    "player",
+    "mootools",
+    "captions",
+    "subtitles",
+    "playlist",
+    "debug"
+  ],
+  "authors": [{
+    "name": "Colin Aarts",
+    "email": "colin@colinaarts.com",
+    "homepage": "http://colinaarts.com"
+  }, {
+    "name": "Nathan Bishop",
+    "email": "nbish11@hotmail.com",
+    "homepage": "https://github.com/nbish11"
+  }],
+  "homepage": "http://colinaarts.com/code/moovie",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Moovie/Moovie.git"
   },
-  "devDependencies": {
-
-  }
+  "dependencies": {},
+  "devDependencies": {},
+  "resolutions": {},
+  "private": true
 }

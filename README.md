@@ -1,4 +1,4 @@
-# microjs
+# Moovie - An advanced HTML5 video player for MooTools.
 [![Build Status][build-image]][build-url]
 [![Code GPA][gpa-image]][gpa-url]
 [![Test Coverage][coverage-image]][coverage-url]
