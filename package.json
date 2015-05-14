@@ -46,7 +46,7 @@
     "grunt-contrib-uglify": "*",
     "grunt-karma": "*",
     "karma-chai": "*",
-    "karma-coverage": "*",
+    "karma-coverage": "^0.3.1",
     "karma-mocha": "*",
     "karma-phantomjs-launcher": "*",
     "karma-sinon": "*",

@@ -15,10 +15,10 @@ module.exports = function (config) {
     /*
      Path used to resolve file paths
      */
-    basePath : '../',
+    basePath : '',
 
     files: [
-        'microjs.js',
+        'src/**/*.js',
         'test/spec/*.spec.js'
     ],
     
@@ -32,7 +32,7 @@ module.exports = function (config) {
      Test pre-processors
      */
     preprocessors: {
-      'microjs.js': ['coverage']
+      'src/**/*.js': ['coverage']
     },
 
     /*
@@ -40,13 +40,13 @@ module.exports = function (config) {
      html, lcovonly, lcov, cobertura, text-summary, text, teamcity, clover etc.
      */
     coverageReporter: {
-      reporters: [{
-        type: 'text',
-        dir: 'test/coverage'
-      }, {
+      //reporters: [{
+      //  type: 'text',
+      //  dir: 'test/coverage'
+     // }, {
         type: 'lcov',
         dir: 'test/coverage'
-      }]
+     // }]
     },
 
     /*

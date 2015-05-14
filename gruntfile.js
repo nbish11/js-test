@@ -12,7 +12,7 @@
 
 module.exports = function (grunt) {
   var config = {
-    app: '.',
+    app: 'src/',
     dist: '.'
   };
 
@@ -30,7 +30,7 @@ module.exports = function (grunt) {
     },
     karma: {
       unit: {
-        configFile: 'test/karma.conf.js'
+        configFile: 'karma.conf.js'
       }
     }
   });
