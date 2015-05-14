@@ -1,7 +1,7 @@
 {
   "name": "Moovie",
   "description": "An advanced HTML5 video player for MooTools.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "main": [
     "dist/Moovie.js",
     "dist/Moovie.css"

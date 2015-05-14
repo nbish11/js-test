@@ -8,7 +8,7 @@
   "maxdepth": 3,
   "maxerr": 18,
   "maxparams": 3,
-  "maxstatements": 8,
+  "maxstatements": 15,
   "nocomma": true,
   "shadow": "outer",
   "singleGroups": true,

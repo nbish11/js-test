@@ -1,4 +1,4 @@
-/* global module, require, console */
+/* global module, require */
 module.exports = function (grunt) {
     'use strict';
     
@@ -119,23 +119,19 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['test', 'build']);
     grunt.registerTask('release', function (target, msg) {
         var bumpOptions = grunt.config.data.bump.options;
-        var allowed = ['patch', 'minor', 'major'];
+        var allowed = ['patch', 'minor', 'major', 'git',
+                       'prepatch', 'prerelease', 'preminor'];
         
         if (inArray(target, allowed)) {
-        
             if (msg) {
                 bumpOptions.commitMessage = msg;
             }
-            
         } else if (!msg && target) {
             bumpOptions.commitMessage = target;
-            target = 'patch';
-        } else {
-            target = 'patch';
+            target = undefined;
         }
         
-        console.log(target, bumpOptions.commitMessage);
-        target = 'bump-only:' + target;
-        //grunt.task.run(['default', target, 'bump-commit']);
+        target = 'bump-only:' + (target || 'patch');
+        grunt.task.run(['default', target, 'bump-commit']);
     });
 };
