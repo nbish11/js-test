@@ -2,7 +2,7 @@
 [![Build Status][build-image]][build-url]
 [![Code GPA][gpa-image]][gpa-url]
 [![Test Coverage][coverage-image]][coverage-url]
-[![Dependency Status][depstat-image]][depstat-url]
+[![devDependency Status](https://david-dm.org/nbish11/microjs/dev-status.svg)](https://david-dm.org/nbish11/microjs#info=devDependencies)
 [![Bower Version][bower-image]][bower-url]
 [![NPM version][npm-image]][npm-url]
 
@@ -37,7 +37,7 @@ All tasks can be run by simply running `grunt` or with the `npm test` command, o
 
 (The MIT License)
 
-Copyright (c) 2015 Nathan 
+Copyright (c) 2008 Colin Aarts
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -68,9 +68,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [coverage-url]: https://codeclimate.com/github/nbish11/microjs/code?sort=covered_percent&sort_direction=desc
 [coverage-image]: https://codeclimate.com/github/nbish11/microjs/coverage.png
-
-[depstat-url]: https://david-dm.org/nbish11/microjs
-[depstat-image]: https://david-dm.org/nbish11/microjs.png?theme=shields.io
 
 [issues-url]: https://github.com/nbish11/microjs/issues
 [issues-image]: http://img.shields.io/github/issues/nbish11/microjs.png

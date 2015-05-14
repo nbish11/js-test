@@ -38,7 +38,7 @@ module.exports = function (config) {
         
         // List of files/patterns to load in the browser.
         files: [
-            'src/**/*.js',
+            'src/js/*.js',
             'test/specs/*.js'
         ],
         
@@ -53,7 +53,7 @@ module.exports = function (config) {
         
         // A map of preprocessors to use.
         preprocessors: {
-            'src/**/*.js': ['coverage']
+            'src/js/*.js': ['coverage']
         },
         
         // A list of reporters to use.
