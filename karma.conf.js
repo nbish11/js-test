@@ -38,12 +38,23 @@ module.exports = function (config) {
         
         // List of files/patterns to load in the browser.
         files: [
-            'src/js/*.js',
+            // dependencies
+            'lib/mootools-core/dist/mootools-core.js',
+            
+            // source
+            'src/js/Moovie.js',
+            'src/js/Moovie.MediaAttributes.js',
+            'src/js/Moovie.Playlist.js',
+            
+            // fixtures
+            { pattern: 'test/fixtures/*.json' },
+            
+            // tests
             'test/specs/*.js'
         ],
         
         // List of test frameworks you want to use.
-        frameworks: ['mocha', 'sinon-chai'],
+        frameworks: ['mocha', 'chai-sinon', 'fixture'],
         
         // Level of logging.
         logLevel: config.LOG_WARN,
@@ -53,7 +64,8 @@ module.exports = function (config) {
         
         // A map of preprocessors to use.
         preprocessors: {
-            'src/js/*.js': ['coverage']
+            'src/js/*.js': ['coverage'],
+            'test/fixtures/*.json': ['html2js']
         },
         
         // A list of reporters to use.

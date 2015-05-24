@@ -30,22 +30,27 @@
     "playlist",
     "debug"
   ],
-  "authors": [{
-    "name": "Colin Aarts",
-    "email": "colin@colinaarts.com",
-    "homepage": "http://colinaarts.com"
-  }, {
-    "name": "Nathan Bishop",
-    "email": "nbish11@hotmail.com",
-    "homepage": "https://github.com/nbish11"
-  }],
+  "authors": [
+    {
+      "name": "Colin Aarts",
+      "email": "colin@colinaarts.com",
+      "homepage": "http://colinaarts.com"
+    },
+    {
+      "name": "Nathan Bishop",
+      "email": "nbish11@hotmail.com",
+      "homepage": "https://github.com/nbish11"
+    }
+  ],
   "homepage": "http://colinaarts.com/code/moovie",
   "repository": {
     "type": "git",
     "url": "git://github.com/Moovie/Moovie.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "mootools-core": "~1.5.1",
+    "mootools-more": "~1.5.1"
+  },
   "devDependencies": {},
-  "resolutions": {},
   "private": true
 }

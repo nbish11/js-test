@@ -16,7 +16,11 @@ module.exports = function (grunt) {
             },
             
             dist: {
-                src: ['src/js/<%= pkg.name %>.js'],
+                src: [
+                    'src/js/Moovie.js',
+                    'src/js/Moovie.MediaAttributes.js',
+                    'src/js/Moovie.Playlist.js'
+                ],
                 dest: 'dist/<%= pkg.name %>.js'
             }
         },
@@ -60,7 +64,10 @@ module.exports = function (grunt) {
             
             watch: {
                 configFile: '<%= jshint.karmafile.src %>',
-                background: true
+                browsers: ['Firefox'],
+                background: true,
+                singleRun: false,
+                reporters: ['mocha', 'coverage']
             }
         },
         
