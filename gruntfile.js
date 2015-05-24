@@ -59,7 +59,8 @@ module.exports = function (grunt) {
         
         karma: {
             unit: {
-                configFile: '<%= jshint.karmafile.src %>'
+                configFile: '<%= jshint.karmafile.src %>',
+                browsers: ['Firefox']
             },
             
             watch: {
