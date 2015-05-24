@@ -1,0 +1,12 @@
+[{
+    "title": "Avatar",
+    "src": "http://colinaarts.com/assets/avatar.ogv",
+    "poster": "http://colinaarts.com/assets/avatar.png"
+}, {
+    "title": "Alice in Wonderland",
+    "src": "http://colinaarts.com/assets/alice.ogv"
+}, {
+    "title": "Shrek: Forever After",
+    "src": "http://colinaarts.com/assets/shrek.ogv",
+    "skip": true
+}]
