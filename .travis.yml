@@ -16,6 +16,7 @@ before_install:
   - "npm install -g codeclimate-test-reporter"
 
 after_script:
+  - ""
   - "codeclimate < coverage/**/lcov.info"
 
 install:
