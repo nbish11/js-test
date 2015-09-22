@@ -1,288 +1,194 @@
-/* global Moovie */
-(function (Moovie) {
+/* global Moovie:false */
+(function () {
     'use strict';
-    
+
+    // http://phpjs.org/functions/basename/
+    function basename(path, suffix) {
+        var b = path;
+        var lastChar = b.charAt(b.length - 1);
+
+        if (lastChar === '/' || lastChar === '\\') {
+            b = b.slice(0, -1);
+        }
+
+        b = b.replace(/^.*[\/\\]/g, '');
+
+        /* jshint eqeqeq:false */
+        if (typeof suffix === 'string' && b.substr(b.length - suffix.length) == suffix) {
+            b = b.substr(0, b.length - suffix.length);
+        }
+        /* jshint eqeqeq:true */
+
+        return b;
+    }
+
+    function extension(path) {
+        return path.split('.').pop();
+    }
+
+    function filename(path) {
+        return basename(path, '.' + extension(path));
+    }
+
     Moovie.Playlist = new Class({
-        Implements: [Events, Options],
-        
+        Implements: [Events, Options, Moovie.Ui.Panel],
+
         options: {
-            disabled: false,
-            url: null,
             name: '',
+            url: null,
             template: {
-                'class': 'active',
-                html: '<p>{{title}}</p>'
+                parent: 'ol.playlist',
+                child: 'li[text={title}]',
+                active: 'active',
+                handler: null,
+                text: '{title} ({year})'
             }
         },
-        
-        /**
-         * Creates an instance of Moovie.Playlist
-         * 
-         * @constructor
-         * @this {Moovie.Playlist}
-         * @param {Object} options
-         */
+
         initialize: function (options) {
             this.setOptions(options);
-            this.element = new Element('ol.playlist');
-            
-            this.bound = {
-                parse: this.parse.bind(this),
-                prevent: this.prevent.bind(this),
-                relay: this.relay.bind(this)
-            };
-            
-            this.reset();
-            
-            Object.defineProperties(this, {
-                length: {
-                    enumerable: true,
-                    get: function () {
-                        return this.itemData.length;
-                    }
-                }
-            });
-            
-            if (this.options.url) {
-                this.load(this.options.url);
-            }
-            
-            if (!this.options.disabled) {
-                this.attach();
-            }
-        },
-        
-        /**
-         * Resets the class back to it's default state.
-         * 
-         * @return {Moovie.Playlist}
-         */
-        reset: function () {
+
+            // playlist info
             this.index = 0;
-            this.request = null;
-            this.itemElements = new Elements();
-            this.itemData = [];
-            this.name = this.options.name;
-            this.element.empty();
-            return this;
+            this.element = new Element('ol.playlist');
+            this.items = [];
+            this.length = this.items.length;
+            this.name = this.options.name.toString();
+            this.loaded = false;
+
+            // bound event handlers
+            this.handle = this.handle.bind(this);
+
+            this.attach();
+            //this.load(this.options.url);
         },
-        
-        /**
-         * Makes a HTTP GET request to the provided URL and 
-         * then sends the data to the parse() method on success.
-         * 
-         * @param {String} url  The url must lead to a valid JSON file.
-         * @return {Moovie.Playlist}
-         */
-        load: function (url) {
-            this.request = new Request.JSON({
-                method: 'GET',
-                url: url,
-                async: true,
-                onSuccess: this.bound.parse
-            });
-            
-            this.request.send();
-            return this;
-        },
-        
-        /**
-         * Start listening and responding to events.
-         * 
-         * @return {Moovie.Playlist}
-         */
+
         attach: function () {
-            this.element.addEvent('mousedown', this.bound.prevent);
-            this.element.addEvent('click:relay(li)', this.bound.relay);
+            this.element.addEvent('click:relay(li)', this.handle);
             return this;
         },
-        
-        /**
-         * Stop listening and responding to events.
-         * 
-         * @return {Moovie.Playlist}
-         */
+
         detach: function () {
-            this.element.removeEvent('mousedown', this.bound.prevent);
-            this.element.removeEvent('click:relay(li)', this.bound.relay);
+            this.element.removeEvent('click:relay(li)', this.handle);
             return this;
         },
-        
-        /**
-         * Builds the HTML DOM structure based on the 
-         * template provided and the JSON data provided 
-         * to parse().
-         * 
-         * @return {Moovie.Playlist}
-         */
-        build: function () {
-            var elements = this.itemData.map(function (item, index) {
-                // provide access to item index when building
-                //item.index = index;
-                
-                return new Element('li', {
-                    'class': index === this.index ? 'active' : null,
-                    'html': this.transform(this.options.template.html, item)
-                });
-            }, this);
-            
-            this.itemElements = new Elements(elements);
-            this.element.adopt(this.itemElements);
+
+        handle: function (event, element) {
+            this.select(this.items.indexOf(element));
+            this.fireEvent('click', [event, element]);
+        },
+
+        load: function (url) {
+            var request =  new Request.JSON({
+                url: url,
+                method: 'GET',
+                async: true,
+                onSuccess: this.parse.bind(this)
+            });
+
+            this.loaded = false;
+            request.send();
+            this.fireEvent('load', [request]);
             return this;
         },
-        
-        /**
-         * Parses the raw JSON response into the playlist and 
-         * builds the DOM structure. Use this method if you 
-         * want to use javascript object array for the playlist 
-         * data instead.
-         * 
-         * @param {Array} response  Must be an array of objects.
-         * @return {Moovie.Playlist}
-         */
-        parse: function (response) {
-            this.itemData.combine(response);
-            this.build();
-            this.fireEvent('load', [
-                this.itemData,
-                this.itemElements
-            ]);
-            
-            return this;
+
+        current: function () {
+            return this.active().item;
         },
-        
-        /**
-         * Checks if another item exists in the playlist before 
-         * the current one, regardless of whether or not it has 
-         * been checked.
-         * 
-         * @return {Boolean}
-         */
-        hasPrevious: function () {
-            return this.index > 0;
+
+        active: function () {
+            return this.items.filter(function (element) {
+                return element.hasClass('active');
+            })[0];
         },
-        
-        /**
-         * Selects the previous unchecked item before the 
-         * current one.
-         * 
-         * @return {Moovie.Playlist}
-         */
-        previous: function () {
-            if (this.hasPrevious()) {
-                this.select(this.index - 1);
+
+        next: function () {
+            if (this.hasNext(this.index)) {
+                this.select(this.index + 1);
             }
-            
-            return this;
         },
-        
-        /**
-         * Checks if another item exists next in the playlist, 
-         * whether or not it has been checked.
-         * 
-         * @return {Boolean}
-         */
+
         hasNext: function () {
             return this.index < this.length - 1;
         },
-        
-        /**
-         * Selects the next unchecked item in the playlist.
-         * 
-         * @return {Moovie.Playlist}
-         */
-        next: function () {
-            if (this.hasNext()) {
-                this.select(this.index + 1);
+
+        previous: function () {
+            if (this.hasPrevious(this.index)) {
+                this.select(this.index - 1);
             }
-            
-            return this;
         },
-        
-        /**
-         * Selects an item by it's index.
-         * 
-         * @param {Number} index  This is always converted to an integer.
-         * @return {Moovie.Playlist}
-         */
+
+        hasPrevious: function () {
+            return this.index > 0;
+        },
+
+        rewind: function () {
+            this.index = 0;
+            this.setActive(this.index);
+            this.fireEvent('rewind');
+        },
+
         select: function (index) {
-            index = index.toInt();
-            
-            if (index >= 0 && index <= this.length - 1) {
+            if (typeOf(index) === 'string') {
+                index = this.items.indexOf(this.findById(index));
+            }
+
+            if (index >= 0 && index < this.length) {
                 this.index = index;
+                this.setActive(index);
                 this.fireEvent('select', [
                     this.current(),
                     this.active()
                 ]);
             }
-            
+
             return this;
         },
-        
-        /**
-         * Returns the currently selected playlist item.
-         * 
-         * @return {Object}
-         */
-        current: function () {
-            return this.itemData[this.index];
-        },
-        
-        /**
-         * Returns the element corresponding to the current() 
-         * playlist item.
-         * 
-         * @return {Element}
-         */
-        active: function () {
-            return this.itemElements.removeClass('active')[this.index].addClass('active');
-        },
-        
-        /**
-         * Allows the class to be treated an an Element.
-         * 
-         * @return {Element}
-         */
+
         toElement: function () {
             return this.element;
         },
-        
-        /**
-         * Disables text highlighting.
-         * 
-         * @param {Object} e  The "mousedown" event object.
-         * @return {Boolean}  Always returns `false`.
-         */
-        prevent: function (e) {
-            e.preventDefault();
-            return false;
+
+        findById: function (id) {
+            return this.items.filter(function (element) {
+                var item = element.item;
+                return 'id' in item && item.id === id;
+            })[0];
         },
-        
-        /**
-         * Handles the click events for the playlist.
-         * 
-         * @param {Object} e  The "click" event object.
-         * @param {Element} clicked  The element that was clicked.
-         * @return {Moovie.Playlist}
-         */
-        relay: function (e, clicked) {
-            this.select(this.itemElements.indexOf(clicked));
+
+        parse: function (data) {
+            var thisIndex = this.index;
+            var template = this.options.template;
+            var contentType = 'html' in template ? 'html' : 'text';
+            var items = data.map(function (item, index) {
+                item.index = index;
+                if (!('title' in item)) {
+                    // @todo: check "sources" array
+                    item.title = filename(item.src).capitalize();
+                }
+                var options = { class: thisIndex === index ? 'active' : null };
+                options[contentType] = template[contentType].substitute(item);
+                var element = new Element('li', options);
+                element.item = item;
+                return element;
+            });
+
+            this.items = items;
+            this.length = items.length;
+            this.element.empty().adopt(items);
+            this.loaded = true;
+            this.fireEvent('ready', [items]);
             return this;
         },
-        
-        /**
-         * Replaces tokens in a template string with the 
-         * associated values found in the "data" object.
-         * 
-         * @param {String} template  Anything surrounded by "{{" and "}}" will be parsed.
-         * @param {Object} data 
-         * @return {String}
-         */
-        transform: function (template, data) {
-            return template.replace(/{{(?:\s*(.*?)\s*(?:\|\|\s*(.*?)\s*)?)}}/g, function (token, key, defaultValue) {
-                return key in (data || {}) ? data[key] : typeof defaultValue !== 'undefined' ? defaultValue : '';
+
+        setActive: function (index) {
+            this.items.each(function (element) {
+                element.removeClass('active');
             });
+
+            this.items[index].addClass('active');
+            return this;
         }
     });
-    
-})(Moovie);
+
+}) ();

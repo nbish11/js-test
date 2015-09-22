@@ -4,4 +4,4 @@ lib/
 bower_components/
 sauce.json
 .coveralls.yml
-test/coverage/
+coverage/

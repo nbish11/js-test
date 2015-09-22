@@ -1,0 +1,101 @@
+/**
+ * Title plugin
+ */
+.moovie > .title,
+.moovie > .title[data-mode="showing"] {
+    font-size: 1.6em;
+    padding: 3px;
+    position: absolute;
+    right: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    top: 5px;
+    color: rgb(255,255,255);
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 500ms ease 0s, opacity 500ms ease 0s;
+    display: block;
+}
+
+.moovie > .title[data-mode="disabled"] {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+.moovie > .title[data-mode="hidden"] {
+    visibility: hidden;
+    opacity: 0;
+    display: block;
+    transition: visibility 500ms ease 8s, opacity 500ms ease 8s;
+}
+
+.panel {
+    background-color: rgba(0, 0, 0, 0.7);
+    bottom: 33px;
+    left: 5px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    display: none;
+    box-sizing: border-box;
+}
+
+.panel > .heading {
+    -moz-user-select: none;
+    background-color: #1ba1e2;
+    box-shadow: -1px 6px 6px -6px rgba(0, 0, 0, 0.35);
+    color: #ffffff;
+    cursor: default;
+    font: 500 1.125rem/1.1 "Segoe UI","Open Sans",sans-serif,serif;
+    height: 2.625rem;
+    padding: 0.625rem 0;
+    vertical-align: middle;
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.moovie .panel .footer,
+.moovie .panel-footer {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.panel .content {
+    bottom: 0;
+    overflow: auto;
+    position: absolute;
+    top: 45px;
+}
+
+.panel .playlist {
+    margin: 0;
+    padding: 0;
+}
+
+.panel .playlist li {
+    clear: both;
+    color: #fff;
+    content: "";
+    display: table;
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+}
+
+.panel .playlist li div:first-child {
+    float: left;
+    width: 20%;
+}
+
+.panel .playlist li div:last-child {
+    float: left;
+    width: 80%;
+}
+
+.panel .playlist li h1,
+.panel .playlist li p {
+    margin: 0;
+}

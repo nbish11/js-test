@@ -43,18 +43,24 @@ module.exports = function (config) {
             
             // source
             'src/js/Moovie.js',
-            'src/js/Moovie.MediaAttributes.js',
+            'src/js/Moovie.registerPlugin.js',
+            'src/js/Moovie.Support.js',
+            'src/js/Moovie.Util.js',
+            'src/js/Moovie.toHTMLTrackElement.js',
+            'src/js/Moovie.Ui.js',
+            'src/js/Moovie.Ui.Panel.js',
+            'src/js/Moovie.MediaEvents.js',
             'src/js/Moovie.Playlist.js',
             
             // fixtures
-            { pattern: 'test/fixtures/*.json' },
+            
             
             // tests
             'test/specs/*.js'
         ],
         
         // List of test frameworks you want to use.
-        frameworks: ['mocha', 'chai-sinon', 'fixture'],
+        frameworks: ['mocha', 'chai-sinon'],
         
         // Level of logging.
         logLevel: config.LOG_WARN,
@@ -64,8 +70,7 @@ module.exports = function (config) {
         
         // A map of preprocessors to use.
         preprocessors: {
-            'src/js/*.js': ['coverage'],
-            'test/fixtures/*.json': ['html2js']
+            'src/js/*.js': ['coverage']
         },
         
         // A list of reporters to use.

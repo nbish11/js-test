@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Moovie.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Moovie.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var Moovie = new Class({
+    /**
+     * Constructs a new Moovie instance.
+     * @class Moovie
+     * @param  {String|Element|Object} video [description]
+     * @param {Object} options [description]
+     * @return {Moovie}       &lt;code>this&lt;/code>
+     */
+    initialize: function (video, options) {
+        if (typeOf(video) === 'object') {
+            video = new Element('video', video);
+        }
+
+        this.video = document.id(video);
+
+        Object.defineProperties(this, {
+            /**
+             * Check if this instance of Moovie is fullscreen
+             * @name Moovie#fullscreen
+             * @type {Boolean}
+             * @default false
+             * @readonly
+             */
+            fullscreen: {
+                enumerable: true,
+                get: function () {
+                    return document.fullscreenEnabled &amp;&amp;
+                        (document.id(document.fullscreenElement) === this.element);
+                }
+            },
+
+            /**
+             * Returns true if the video is playing, aka not paused, stopped, ended, seeking, loading, or waiting on data.
+             * @name Moovie#playing
+             * @type {Boolean}
+             * @default false
+             * @readonly
+             */
+            playing: {
+                enumerable: true,
+                get: function () {
+                    return !(this.video.paused || this.video.ended || this.video.seeking);
+                }
+            }
+        });
+    },
+
+    /**
+     * Builds the DOM for the video player.
+     * @memberof Moovie#
+     * @return {Moovie}        &lt;code>this&lt;/code>
+     */
+    build: function () {
+        // container construction
+        this.element = document.id(this.options.container) || new Element('figure.moovie');
+        if (this.element.hasClass('moovie') === false) {
+            this.element.addClass('moovie');
+        }
+
+        // add player to dom
+
+        /**
+         * Holds the instance of the playlist currently associated with the player
+         * @name Moovie#playlist
+         * @type {Moovie.Playlist}
+         * @example
+         * // Moovie gives you the ability to load a new playlist by just doing this
+         * moovieInstance.playlist.load('http://example.com/playlist.json'); // and Moovie will take care of the rest
+         * @readonly
+         */
+        this.playlist = new Moovie.Playlist();
+    },
+
+    /**
+     * Re-loads the video. Or loads a new video.
+     * @memberof Moovie#
+     * @param  {String} src    [description]
+     * @param  {String} poster [description]
+     * @return {Moovie}        &lt;code>this&lt;/code>
+     */
+    load: function (src, poster) {
+        // a video src MUST NOT be empty, if provided
+        if (src) {
+            this.video.src = src;
+        }
+
+        // remove the currently set poster if an empty string is passed in
+        if (poster || poster === '') {
+            this.video.poster = poster;
+        }
+
+        this.video.load();
+        return this;
+    },
+
+    /**
+     * Play the video if the criteria matches
+     * @memberof Moovie#
+     * @return {Moovie} &lt;code>this&lt;/code>
+     */
+    play: function () {
+        // if video is seeking, leave it alone. Stopped is the initial ready state
+        if (this.paused || this.ended || this.stopped) {
+            this.video.play();
+        }
+
+        return this;
+    },
+
+    /**
+     * Pause the video if it's playing
+     * @memberof Moovie#
+     * @return {Moovie} &lt;code>this&lt;/code>
+     */
+    pause: function () {
+        if (this.playing) {
+            this.video.pause();
+        }
+
+        return this;
+    },
+
+    /**
+     * Stops the video including any buffering, and puts the video in a "stopped" state.
+     * @memberof Moovie#
+     * @return {Moovie} &lt;code>this&lt;/code>
+     */
+    stop: function () {
+        this.video.pause();
+        this.video.currentTime = 0;
+        this.load(this.video.currentSrc, this.video.poster || '');
+        return this;
+    },
+
+    /**
+     * Sends the Moovie player into fullscreen mode. Forces any other players or, elements out of fullscreen mode.
+     * @memberof Moovie#
+     * @return {Moovie} &lt;code>this&lt;/code>
+     */
+    enterFullscreen: function () {
+        // if another element is fullscreen already...
+        if (document.id(document.fullscreenElement) !== null) {
+            document.exitFullscreen();
+        }
+
+        if (!this.fullscreen) {
+            this.element.requestFullscreen();
+        }
+
+        return this;
+    },
+
+    /**
+     * Exits this player out of fullscreen mode, if it is fullscreen.
+     * @memberof Moovie#
+     * @return {Moovie} &lt;code>this&lt;/code>
+     */
+    exitFullscreen: function () {
+        // only call exitFullscreen() if this Moovie instance is fullscreen
+        if (this.fullscreen) {
+            document.exitFullscreen();
+        }
+
+        return this;
+    },
+
+    /**
+     * Seek to a certain point in the video's timeline.
+     * @memberof Moovie#
+     * @return {Moovie} &lt;code>this&lt;/code>
+     */
+    seek: function (timePoint) {
+        this.video.currentTime = timePoint.limit(0, this.video.duration);
+        return this;
+    },
+
+    /**
+     * Sends the Moovie player into fullscreen mode. Forces any other players or, elements out of fullscreen mode.
+     * @memberof Moovie#
+     * @return {Moovie} &lt;code>this&lt;/code>
+     */
+    setVolume: function (volume) {
+        this.video.volume = volume.limit(0, 1);
+        return this;
+    },
+
+    /**
+     * Mute the video's audio output. This does not change the volume.
+     * @memberof Moovie#
+     * @return {Moovie} &lt;code>this&lt;/code>
+     */
+    mute: function () {
+        this.video.muted = true;
+        return this;
+    },
+
+    /**
+     * Un-mute the video's audio output. This does not change the volume.
+     * @memberof Moovie#
+     * @return {Moovie} &lt;code>this&lt;/code>
+     */
+    unmute: function () {
+        this.video.muted = false;
+        return this;
+    },
+
+    /**
+     * Allows the class to be treated like an element, through use of document.id.
+     * @memberof Moovie#
+     * @return {Moovie} &lt;code>this&lt;/code>
+     */
+    toElement: function () {
+        return this.element;
+    }
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Moovie.html">Moovie</a></li><li><a href="Moovie.Playlist.html">Moovie.Playlist</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Fri Sep 11 2015 00:27:00 GMT+1000 (E. Australia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

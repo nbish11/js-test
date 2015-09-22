@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Moovie.Playlist.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Moovie.Playlist.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+Moovie.Playlist = new Class({
+	Implements: [Events, Options, Moovie.ui.Panel],
+
+    options: {
+    	name: '',
+        url: null,
+        template: {
+        	parent: 'ol.playlist',
+            child: 'li[text={title}]',
+            active: 'active',
+            handler: null,
+            text: '{title} ({year})'
+        }
+    },
+
+    /**
+     * [initialize description]
+     * @class Moovie.Playlist
+     * @memberof! &lt;global>
+     * @param  {Object} options [description]
+     * @return {Moovie.Playlist}         [description]
+     */
+    initialize: function (options) {
+    	this.setOptions(options);
+
+        /**
+         * The playlist index. -1 for an empty playlist, 0 if the currently
+         * selected playlist item is the first playlist item, and so on.
+         * @name Moovie.Playlist#index
+         * @type {Number}
+         * @default -1
+         * @readonly
+         */
+        this.index = 0;
+
+        /**
+         * The playlist element
+         * @name Moovie.Playlist#element
+         * @type {Element}
+         * @default ol.playlist
+         * @readonly
+         */
+        this.element = new Element('ol.playlist');
+
+        /**
+         * Where all the parsed playlist elements and their associated data are stored.
+         * @name Moovie.Playlist#data
+         * @type {Array}
+         * @default []
+         * @readonly
+         */
+        this.data = [];
+
+        /**
+         * The length of the playlist. How many items were loaded.
+         * @name Moovie.Playlist#length
+         * @type {Number}
+         * @default 0
+         * @readonly
+         */
+        this.length = this.data.length;
+
+        /**
+         * The name of the playlist.
+         * @name Moovie.Playlist#name
+         * @type {Array}
+         * @default ''
+         * @readonly
+         */
+        this.name = this.options.name.toString();
+
+        // bound event handlers
+        this.handle = this.handle.bind(this);
+
+        this.attach();
+
+        if (this.options.url) {
+            this.load(this.options.url);
+        }
+    },
+
+    attach: function () {
+    	this.element.addEvent('click:relay(li)', this.handle);
+        return this;
+    },
+
+    detach: function () {
+    	this.element.removeEvent('click:relay(li)', this.handle);
+        return this;
+    },
+
+    handle: function (event, element) {
+    	this.select(this.data.indexOf(element));
+        this.fireEvent('click', [event, element]);
+    },
+
+    load: function (url) {
+    	var request =  new Request.JSON({
+        	url: url,
+            method: 'GET',
+            async: true,
+            onSuccess: this.parse.bind(this)
+        });
+
+        request.send();
+        this.fireEvent('load', [request]);
+        return this;
+    },
+
+    current: function () {
+    	return this.active().item;
+    },
+
+    active: function () {
+    	return this.data.filter(function (element) {
+        	return element.hasClass('active');
+        })[0];
+    },
+
+    next: function () {
+    	if (this.hasNext(this.index)) {
+        	this.select(this.index + 1);
+        }
+        return this;
+    },
+
+    hasNext: function () {
+        return this.index &lt; this.length - 1;
+    },
+
+    previous: function () {
+    	if (this.hasPrevious(this.index)) {
+        	this.select(this.index - 1);
+        }
+        return this;
+    },
+
+    hasPrevious: function () {
+    	return this.index > 0;
+    },
+
+    rewind: function () {
+    	this.index = 0;
+        this.setActive(this.index);
+        this.fireEvent('rewind');
+        return this;
+    },
+
+    select: function (index) {
+    	if (typeOf(index) === 'string') {
+        	index = this.data.indexOf(this.findById(index));
+        }
+
+        if (index >= 0 &amp;&amp; index &lt; this.length) {
+        	this.index = index;
+            this.setActive(index);
+            this.fireEvent('select', [
+            	this.current(),
+                this.active()
+            ]);
+        }
+
+        return this;
+    },
+
+    toElement: function () {
+    	return this.element;
+    },
+
+    findById: function (id) {
+        return this.data.filter(function (element) {
+            var item = element.item;
+        	return 'id' in item &amp;&amp; item.id === id;
+        })[0];
+    },
+
+    parse: function (data) {
+    	var thisIndex = this.index;
+        var template = this.options.template;
+        var contentType = 'html' in template ? 'html' : 'text';
+        data = data.map(function (item, index) {
+            var element, options;
+
+            item.index = index;
+            options = {
+                class: thisIndex === index ? 'active' : null
+            };
+
+            options[contentType] = template[contentType].substitute(item);
+            element = new Element('li', options);
+            element.item = item;
+
+            return element;
+        });
+
+        this.data = data;
+        this.length = data.length;
+        this.element.empty().adopt(data);
+        this.fireEvent('ready', [data]);
+        return this;
+    },
+
+    setActive: function (index) {
+    	this.data.each(function (element) {
+            element.removeClass('active');
+        });
+
+        this.data[index].addClass('active');
+        return this;
+    }
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Moovie.html">Moovie</a></li><li><a href="Moovie.Playlist.html">Moovie.Playlist</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Fri Sep 11 2015 00:27:00 GMT+1000 (E. Australia Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,64 +1,98 @@
-# Moovie - An advanced HTML5 video player for MooTools.
+# Moovie
+> An advanced HTML5 video player for MooTools.
+
 [![Build Status][build-image]][build-url]
 [![Code GPA][gpa-image]][gpa-url]
 [![Test Coverage][coverage-image]][coverage-url]
-[![devDependency Status](https://david-dm.org/nbish11/microjs/dev-status.svg)](https://david-dm.org/nbish11/microjs#info=devDependencies)
+[![devDependency Status][dependencies-image]][dependencies-url]
 [![Bower Version][bower-image]][bower-url]
 [![NPM version][npm-image]][npm-url]
 
-## About
+## Getting Started
 
-All about how amazing the microjs micro-library is.
+### Using Bower
+_If you haven't used [Bower](http://bower.io/) before, be sure to check out their [Getting Started](http://bower.io/#getting-started) guide._
 
-This repository was scaffolded with [generator-microjs](https://github.com/daniellmb/generator-microjs).
+From the same directory as your project's _bower.json_, install Moovie with the following command:
 
-## Examples
-
-### JavaScript
-
-```JavaScript
-  // TODO
+```bash
+bower install Moovie
 ```
 
-## Install Choices
-- `bower install microjs`
-- [download the zip](https://github.com/nbish11/microjs/archive/master.zip)
+Once that's done, add this line to your HTML file:
+
+```html
+<script src="/bower_components/Moovie/dist/moovie.min.js"></script>
+```
+
+## Usage
+Dynamically create a Moovie instance with a subtitles and a title, then add to DOM.
+
+```js
+var player = new Moovie({
+    debug: true,
+    src: '/assets/avatar_2008.mp4',
+    title: 'Avatar (2008)'
+    tracks: [{
+        kind: 'subtitles',
+        src: '/assets/avatar_2008.vtt',
+        srclang: 'en',
+        default: true,
+        label: 'English Subtitles'
+    }]
+});
+
+$(player).inject(document.body);
+```
+
+Convert an existing `<video>` element to a Moovie instance and add a playlist.
+
+```js
+$('my-video').Moovie({
+    debug: true,
+    playlist: '/playlist.json'
+});
+```
+
+See the [Wiki]() for more exmaples.
 
 ## Tasks
+Before using any of the following tasks you must run the following commands:
 
-All tasks can be run by simply running `grunt` or with the `npm test` command, or individually:
+```bash
+npm install -g grunt-cli karma-cli bower
+```
 
-  * `grunt lint` will lint source code for syntax errors and anti-patterns.
-  * `grunt gpa` will analyze source code against complexity thresholds.
-  * `grunt test` will run the mocha unit tests against the source code.
-  * `grunt test-min` will run the mocha unit tests against the minified code.
+```bash
+npm install && bower install
+```
+
+* `grunt build` creates a distributable copy and a minified copy from the source code (saved in the `./dist/` directory).
+* `grunt test` will lint source code, create coverage reports and run Karma in CI mode.
+* `grunt start` does the same as `grunt test` but monitors the source code for changes, on the fly.
+* `grunt release` will update the versions in _bower.json_ and _package.json_, tag a commit with a [Semver]() _patch_ and push to GitHub.
+
+## Tests
+This project uses [Mocha](http://mochajs.org/), [Chai](http://chaijs.com/) and [Sinon](http://sinonjs.org/) for testing and all tests/coverage reports can be found in the `./tests/` directory.
+
+## Contributing
+1. Fork this repository!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push your branch: `git push origin my-new-feature`
+5. Submit a pull request.
+
+## Changelog
+Changes will not be recorded until Moovie has officially been released
+
+## Contributors
+* Colin Aarts <colin@colinaarts.com>
+* Nathan Bishop <nbish11@hotmail.com>
 
 ## License
+The MIT License (MIT)
 
-(The MIT License)
-
-Copyright (c) 2008 Colin Aarts
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
+Copyright (c) 2010 Colin Aarts
 
 [build-url]: https://travis-ci.org/nbish11/microjs
 [build-image]: http://img.shields.io/travis/nbish11/microjs.png
@@ -68,6 +102,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [coverage-url]: https://codeclimate.com/github/nbish11/microjs/code?sort=covered_percent&sort_direction=desc
 [coverage-image]: https://codeclimate.com/github/nbish11/microjs/coverage.png
+
+[dependencies-url]: https://david-dm.org/nbish11/microjs#info=devDependencies
+[dependencies-image]: https://david-dm.org/nbish11/microjs/dev-status.svg
 
 [issues-url]: https://github.com/nbish11/microjs/issues
 [issues-image]: http://img.shields.io/github/issues/nbish11/microjs.png

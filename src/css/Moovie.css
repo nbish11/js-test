@@ -1,0 +1,243 @@
+/**
+ * Moovie playback states:
+ *   - [data-playbackstate="loading"]  the video is loading the src
+ *   - [data-playbackstate="stopped"]  the video has loaded all it's metadata
+ *   - [data-playbackstate="playing"]  the video is playing
+ *   - [data-playbackstate="waiting"]  the video is trying to load more data to continue playback
+ *   - [data-playbackstate="paused"]   the video has been paused
+ *   - [data-playbackstate="seeking"]  the video is being seeked to a new time
+ *   - [data-playbackstate="ended"]    the video has ended
+ */
+
+.moovie {
+    display: block;
+    margin: auto;
+    max-width: 980px;
+    min-width: 310px;
+    position: relative;
+    width: 100%;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/*                   VIDEO                                                   */
+/* ------------------------------------------------------------------------- */
+
+.moovie video {
+    display: block;
+    height: auto;
+    object-fit: contain;
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/*                   CONTROLS                                                */
+/* ------------------------------------------------------------------------- */
+
+.moovie .controls {
+    background: rgba(0, 0, 0, 0.5) none repeat scroll 0 0;
+    bottom: 0;
+    display: table;
+    height: 28px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: auto;
+    width: 100%;
+    visibility: visible;
+    opacity: 1;
+}
+
+.moovie .controls > .wrapper {
+    display: table-row;
+}
+
+.moovie .controls > .wrapper > * {
+    display: table-cell;
+    vertical-align: middle;
+    width: 28px;
+    background-size: 13px 13px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    text-align: center;
+}
+
+.moovie .controls .elapsed,
+.moovie .controls .duration {
+    color: #fff;
+}
+
+.moovie[data-playbackstate="loading"] .controls .play,
+.moovie[data-playbackstate="paused"] .controls .play,
+.moovie[data-playbackstate="ended"] .controls .play,
+.moovie[data-playbackstate="stopped"] .controls .play {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAWBJREFUeNqEUbtOAzEQ3LXvkkuU0CBRUSA6voAv4APoU1NTIgpoUEA0dJEACYH4A0oQDVAgBF9AhURDQ4Eg3F3sXcZOggiPsLqV7fPM7syaVZXaV3MdVT5Q0VslJVImcUqCrXfhrOEjXyptLd6TIURS5VbWMJdsaBOXk/RPRJIIvSQpZ/WmXUmr5gbEVqg8luQdRTlBRbVmZmsNc2xTOsV5nvQPkjohBxKSXQ9OmChr2IWszhfG0g7IUz9IbtBpmL4XUtQmXKk17XKamTuUXgK0HmcQPQWgC0MaOhldK5mZRvPdbuFncFxN+p40pkZhAchxZQSegcp3/1wWuo2/+5+dfJQlcRCDDuARu0Io78qReF3HdB/IMI3IC74odOJQgAL4Gr7WjOUz5tHp9UkeTSADFSFFn8pc2gB28NjuO+ELSSeKrmj+KnvYb9iUH38Dj5DyN38CzCEbPh8HHsaHAAMAjQHRfeZB1igAAAAASUVORK5CYII=');
+}
+
+.moovie[data-playbackstate="playing"] .controls .play,
+.moovie[data-playbackstate="seeking"] .controls .play,
+.moovie[data-playbackstate="waiting"] .controls .play {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAStJREFUeNp0Us1NxTAM/py04sEBcUIcEFckRmAHTuzAApyYALEDs3BBYgOexBBckGj12tjGSdzSPkElN+6X7yeOSqqKx7er5xBxroAoo1fBHRFOKOCJIiKAVhI+Hq6399ajya8YcXN43JyaCEPHw66TI+vPNpt42x5QpqD/kktbfkXCGCUpvC9lSSKsUK4iER3hTxEl22QTGRGZmAvWczYwPNuxm84iTU70zdkgCTiGmrQvYk9ai8hW+46O875oRCFUUS0iLe4c60w8TzSJirv4ppGtYKdKhoeYcSr4SlQcPUmm4wUskvSPmdJipun2pKaGf2did6KFQah4XFzQ+soZjdaRkFdPIsOxwJuVaOjlJY1ykQ2N2Nnv2Fn/ufuWV9vLnNaS3ifRjwADAMXv8wZET+RFAAAAAElFTkSuQmCC');
+}
+
+.moovie .controls .stop {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJNJREFUeNqUkb0NwkAMRr8cjggFgzBFSmZiAfZCSFkHClCK8w82oce2ZMlXPL377OF6P13aiBmA4n81ZdwIzebDcTwjWe8ng1SwKluWgaqtJGJQb2S4ARAXUFikYgpIipAwwrQNeUjd1O07lEzxNS2Ytky+OS5l+m3PCiuP88RxJ+9Kpom42/J69H28E8zOoeUjwAAogWktmShFOAAAAABJRU5ErkJggg==');
+}
+
+.moovie .controls .previous {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAZRJREFUeNpsUj1LY1EQnZn7jIkRQSy2shXsLLQSFlawE2tLy212LWwULGxELAQLe8HOf7Cdje22NhaKjY0GTIJJ3r0z48y7fiTihfsGhjnnzDn3oarCwdX8GiKuguqdKp4ggpYDASKoDhECEmxandldvj6m3IT1yenwN9RoOyWhVAqoaAUwzlkKcD4xFc6AYMF7hX+EoadsA6wdTVbzsNff9Sbt1xr0wzaxOe19gDipN4BZhaMwBVwaq+NRvRl+FQU6mXOgpLxuVjJQcmDSAhAOa03aqtWp4VIxvmk6OSuOKHFUCAXNTUzRjnkALjVPvh+sSGEIlIHgsdmRCN8eHgWJXTImi8zSDcHB8EUJqm2qtN+VzCz0unLTeeSDfldeRBQtHOQcULaQhkBSNTx6TXEgey9t/tl5Spdl31MF5Ogq1dMMKX2ykd1gpv+XA13ptNKf3jO3hAX9sUeVGMZ9X6tNV4ym4I9prk77XV7stvgi9sUtNIYjv2g/pgfzfo9kVsTYNJu3f+7WCDdM9Z8Rzfj8qwADABu1GGRTVKgTAAAAAElFTkSuQmCC');
+}
+
+.moovie .controls .next {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAZZJREFUeNpkUrFuFDEQnfGa29u7cBIVFSgtHQ1dhMQP5A/SU0WRkuIkhEKBRB0JiZITHT1doiCQqCgo06TIB+Sau5Dd2/XM5Nm3bJbE0sj2zHt+nmezmdGHX8/2VWluSjNVIzImRd7njjCYyfaYeRPY4zdbZ9/WWUfPi0n22WX0BdgnxOApkTQaI/MDd7DxKNsFezviE0mFSodVMfE7w7H7Da3XFgUFEchMbJnWwHUkEWMNhqTZIOfHo4fu04OcTk3tRWhUUFcVi7gIJ5+UQAhhncB56Ih5OM5e1Zn+qJZyhLqPdQ09koRITPiOmIqei9HET+NOGku4HslS3BtCBtFoi4HAErR3vaYl3eEBziKa8s5zp5SMCK2StM3irThGeaXXi8vwHvO5ye1tWsuRaNrehLiujJbz8L1cyMtQ21vUw7pv+78n2Bvb57rUOeIdLPzofTLAo+6kp5RIeLSiqZSqv/oVp03Z84VDQ81K/6mPonuY847U1PqnrvTEOZ7hK8VflEwX/ALOSFalHEL9KdI/I/5GgAEASz8mmrb78LEAAAAASUVORK5CYII=');
+}
+
+.moovie .controls .volume {
+    color: #fff;
+}
+
+.moovie .controls .fullscreen {
+    background-image: url("https://raw.githubusercontent.com/Moovie/Icons/master/player/player-fullscreen-request.png");
+}
+
+.moovie .controls .seekbar {
+    padding: 0 14px;
+    width: auto;
+}
+
+.moovie .slider {
+    width: 100%;
+    height: 100%;
+}
+.moovie .slider .track {
+    background-color: rgba(255, 255, 255, 0.6);
+    height: 8px;
+    position: relative;
+    width: 100%;
+}
+.moovie .slider .track .fill {
+    background: rgba(0, 255, 0, 0.1) none repeat scroll 0 0;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+    cursor: default;
+    height: 10px;
+    left: 0;
+    margin-top: -5px;
+    position: absolute;
+    top: 50%;
+}
+.moovie .slider .track .bar {
+    background: #b9dc84 none repeat scroll 0 0;
+    border-radius: 4px;
+    bottom: 0;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 0;
+}
+
+.moovie .slider .track .knob {
+    background: #b9dc84 none repeat scroll 0 0;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    height: 10px;
+    left: -7px;
+    position: absolute;
+    top: -3px;
+    width: 10px;
+}
+
+/* Hide controls when video is stopped. This allows for
+   the overlay to look like a "Big Play Button". */
+.moovie[data-playbackstate="stopped"] .controls {
+    visibility: hidden;
+    opacity: 0;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/*                   OVERLAY                                                 */
+/* ------------------------------------------------------------------------- */
+
+.moovie .overlay,
+.mooive[data-playbackstate="playing"] .overlay {
+    -moz-box-align: center;
+    -moz-box-pack: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-position: center center, center center;
+    background-repeat: repeat, no-repeat;
+    background-size: auto auto, 64px 64px;
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    display: block;
+    transition: all 500ms ease 0s;
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.moovie .overlay::after,
+.moovie[data-playbackstate="playing"] .overlay::after {
+    background: none repeat scroll 0 0 #A5D260;
+    border: 4px solid #FFFFFF;
+    border-radius: 10px;
+    color: #000000;
+    display: block;
+    font-size: 2em;
+    height: 70px;
+    left: 50%;
+    line-height: 70px;
+    margin: -35px auto auto -100px;
+    position: relative;
+    text-align: center;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    top: 50%;
+    width: 20%;
+    content: '';
+}
+
+/* Show the overlay when the video is in these states */
+.moovie[data-playbackstate="loading"] .overlay,
+.moovie[data-playbackstate="stopped"] .overlay,
+.moovie[data-playbackstate="paused"] .overlay,
+.moovie[data-playbackstate="ended"] .overlay,
+.moovie[data-playbackstate="seeking"] .overlay,
+.moovie[data-playbackstate="waiting"] .overlay {
+    visibility: visible;
+    opacity: 1;
+}
+
+.moovie[data-playbackstate="loading"] .overlay::after {
+    content: 'Loading';
+    pointer-events: none;
+}
+
+.moovie[data-playbackstate="stopped"] .overlay::after {
+    content: 'Play video';
+}
+
+.moovie[data-playbackstate="paused"] .overlay::after {
+    content: 'Paused';
+}
+.moovie[data-playbackstate="ended"] .overlay::after {
+    content: 'Replay';
+}
+.moovie[data-playbackstate="seeking"] .overlay::after {
+    content: 'Seeking';
+    pointer-events: none;
+}
+.moovie[data-playbackstate="waiting"] .overlay::after {
+    content: 'Buffering';
+    pointer-events: none;
+}
